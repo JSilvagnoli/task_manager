@@ -19,19 +19,18 @@ def display_menu():
     print("==== TASK MANAGER ====")
     print("1. View Tasks")
     print("2. Add Task")
-    print("3. Create Task")
-    print("4. Update Task")
-    print("5. Delete Task")
-    print("6. Search")
-    print("7. Statistics")
-    print("8. Save")
-    print("9. Load")
-    print("10. Quit")
+    print("3. Update Task")
+    print("4. Delete Task")
+    print("5. Search")
+    print("6. Statistics")
+    print("7. Save")
+    print("8. Load")
+    print("9. Quit")
 
     return input("Choice: ")
 
 # Dispaly individual tasks and statuses
-def display_tasks(task_list):
+def view_tasks(task_list):
     for index in task_list:
         print_task_info(index)
 
@@ -41,27 +40,58 @@ def add_task(task_list):
     task_name = input()
     print("Please type the completion status of your task - True/False")
     status = input().lower() == "true"
+    print("Please enter the priority of this task - Low, Medium, High")
+    priority = input()
+    print("Please add a category for this task - Work, Studying, Etc.")
+    category = input()
 
-    new_task = create_task(task_name, status)
+    new_task = create_task(task_name, status, priority, category)
     task_list.append(new_task)
 
 # Create a new task
-def create_task(task_name, completed=False):
+def create_task(task_name, completed=False, priority=None, category=None):
     return {
         "task": task_name,
-        "completed": completed
+        "completed": completed,
+        "priority": priority,
+        "category": category
         }
 
 # Change status of task
 def update_task(task_list):
     print("Which task would you like to update?")
     task_to_update = input()
-    print("Type True for complete, False for incomplete")
-    status = input().lower() == "true"
-    for index in task_list:
-        if index["task"] == task_to_update:
-            index["completed"] = status
-            break
+    print("Would you like to update the 1. Task Name, 2. Completion Status, 3. Priority, 4. Category? (Type number, 1, 2, 3, etc.)")
+    update_portion = input()
+
+    match int(update_portion):
+        case 1:
+            print("Please enter this task's new name")
+            new_name = input()
+            for index in task_list:
+                if index["task"] == task_to_update:
+                    index["task"] = new_name
+        case 2:
+            print("Type True for complete, False for incomplete")
+            new_status = input()
+            for index in task_list:
+                if index["task"] == task_to_update:
+                    index["completed"] = new_status
+                    break
+        case 3:
+            print("Please enter this task's priority -> Low, Medium, High")
+            new_priority = input()
+            for index in task_list:
+                if index["task"] == task_to_update:
+                    index["priority"] = new_priority
+                    break
+        case 4:
+            print("Please enter this task's category")
+            new_category = input()
+            for index in task_list:
+                if index["task"] == task_to_update:
+                    index["category"] = new_category
+                    break    
 
 # Delete task
 def delete_task(task_list):
@@ -82,10 +112,7 @@ def search(task_list):
             
 # Helper to print task information
 def print_task_info(index):
-    if index["completed"]:
-        print("[X] " + index.get("task"))
-    else:
-        print("[] " + index.get("task"))
+    print("Task Name: " + index.get("task") + " | Completed: " + str(index.get("completed")) + " | Priority: " + str(index.get("priority")) + " | Category: " + str(index.get("category")))
 
 # Displays statistics
 def stats(task_list):
@@ -133,7 +160,7 @@ def load_file(file_to_load):
 def choices(user_input, task_list):
     match int(user_input):
         case 1:
-            display_tasks(task_list)
+            view_tasks(task_list)
         case 2:
             add_task(task_list)
         case 3:
