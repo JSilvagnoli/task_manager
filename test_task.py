@@ -19,7 +19,7 @@ class TestCreateTask(unittest.TestCase):
         self.assertFalse(task["completed"])
         self.assertEqual(task["priority"], "High")
         self.assertEqual(task["category"], "Groceries")
-        self.assertEqual(task["date"], "2026/07/30")
+        self.assertEqual(task["due_date"], "2026/07/30")
 
 
 if __name__ == "__main__":

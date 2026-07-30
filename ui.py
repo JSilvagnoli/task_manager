@@ -60,7 +60,7 @@ def prompt_update_value(field_to_update):
             print("Please enter this task's category")
             value_to_update = input()
         case 5: 
-            print("Please enter this task's due date")
+            print("Please enter this task's due date (YYYY/MM/DD)")
             value_to_update = input()
 
     return value_to_update

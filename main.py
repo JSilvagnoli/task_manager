@@ -28,7 +28,6 @@ def choices(user_input, task_list):
                 task_data["category"],
                 task_data["due_date"]
             )
-
             task_list = task.add_task(task_list, new_task)
         case 3:
             task_name = ui.prompt_task_name()

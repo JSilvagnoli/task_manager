@@ -7,9 +7,46 @@ TASK_FIELDS = {
 }
 
 # Add a task to the list
-def add_task(task_list, task):
-    task_list.append(task)
+def add_task(task_list, new_task):
+    validate_task(new_task)
+    task_list.append(new_task)
     return task_list
+
+def validate_task(new_task):
+    validate_task_name(new_task[TASK_FIELDS[1]])
+    validate_task_completion(new_task[TASK_FIELDS[2]])
+    validate_task_priority(new_task[TASK_FIELDS[3]])
+    validate_task_category(new_task[TASK_FIELDS[4]])
+    validate_task_due_date(new_task[TASK_FIELDS[5]])
+
+def validate_task_name(task_name):
+    if not task_name.strip():
+        raise ValueError("Task name cannot be empty.")
+
+def validate_task_completion(completed):
+    if not isinstance(completed, bool):
+        raise TypeError("Completion status must be True or False.")
+
+def validate_task_priority(priority):
+    if priority is None:
+        return
+    
+    if priority not in ("High", "Medium", "Low"):
+        raise ValueError("Priority must be either Low, Medium, or High")
+
+def validate_task_category(category):
+    if category is None:
+        return
+    
+    if not category.strip():
+        raise ValueError("Category cannot be empty")
+
+def validate_task_due_date(due_date):
+    if due_date is None:
+        return
+    
+    if not due_date.strip():
+        raise ValueError("Due Date cannot be empty")
 
 # Create a new task
 def create_task(task_name, completed=False, priority=None, category=None, due_date=None):
@@ -27,7 +64,7 @@ def find_task(task_list, task_to_update):
             return task
 
 def update_task_field(task, field_to_update, value_to_update):
-    chosen_field = TASK_FIELDS.get(int(field_to_update))
+    chosen_field = TASK_FIELDS[int(field_to_update)]
     task[chosen_field] = value_to_update
     
 def delete_task(task_list, task_name):   
