@@ -2,17 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>313c5636-772c-4605-9f00-30ed4781e0ae</ProjectGuid>
+    <ProjectGuid>3a69df80-c42f-4df8-be6c-9e415ae3a4b0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main.py</StartupFile>
+    <StartupFile>test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>Terminal Task Manager</Name>
-    <RootNamespace>Terminal Task Manager</RootNamespace>
-    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
-    <TestFramework>unittest</TestFramework>
+    <Name>test</Name>
+    <RootNamespace>test</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,23 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main.py" />
-    <Compile Include="storage.py" />
-    <Compile Include="task.py" />
-    <Compile Include="test_task.py" />
-    <Compile Include="ui.py" />
-    <Compile Include="validation.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Interpreter Include="env\">
-      <Id>env</Id>
-      <Version>3.14</Version>
-      <Description>env (Python 3.14.6)</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X64</Architecture>
-    </Interpreter>
+    <Compile Include="test.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
