@@ -13,11 +13,8 @@ def add_task(task_list, new_task):
     return task_list
 
 def validate_task(new_task):
-    validate_task_name(new_task[TASK_FIELDS[1]])
-    validate_task_completion(new_task[TASK_FIELDS[2]])
-    validate_task_priority(new_task[TASK_FIELDS[3]])
-    validate_task_category(new_task[TASK_FIELDS[4]])
-    validate_task_due_date(new_task[TASK_FIELDS[5]])
+    for item in new_task:
+        FIELD_VALIDATION[item]
 
 def validate_task_name(task_name):
     if not task_name.strip():
@@ -65,7 +62,16 @@ def find_task(task_list, task_to_update):
 
 def update_task_field(task, field_to_update, value_to_update):
     chosen_field = TASK_FIELDS[int(field_to_update)]
+    FIELD_VALIDATION[(chosen_field)](value_to_update)
     task[chosen_field] = value_to_update
+
+FIELD_VALIDATION = {
+    "task": validate_task_name,
+    "completed": validate_task_completion,
+    "priority": validate_task_priority,
+    "category": validate_task_category,
+    "due_date": validate_task_due_date
+}
     
 def delete_task(task_list, task_name):   
     for task in task_list:
