@@ -1,3 +1,6 @@
+from datetime import datetime
+from time import strftime
+
 TASK_FIELDS = {
     1: "task",
     2: "completed",
@@ -42,8 +45,10 @@ def validate_task_due_date(due_date):
     if due_date is None:
         return
     
-    if not due_date.strip():
-        raise ValueError("Due Date cannot be empty")
+    try:
+        datetime.strptime(due_date, "%Y/%m/%d")
+    except ValueError:
+        raise ValueError("Invalid date format. Please use (YYYY/MM/DD) format.")
 
 # Create a new task
 def create_task(task_name, completed=False, priority=None, category=None, due_date=None):

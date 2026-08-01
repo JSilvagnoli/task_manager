@@ -7,9 +7,9 @@ def main():
     task_list = storage.load_file(ui.file_to_load())
 
     while True:
-        task_list = choices(ui.display_menu(), task_list)
+        task_list = handle_menu_choice(ui.display_menu(), task_list)
 
-def choices(user_input, task_list):
+def handle_menu_choice(user_input, task_list):
     match int(user_input):
         case 1:
             ui.display_tasks(task_list)
@@ -47,8 +47,7 @@ def choices(user_input, task_list):
         case 8:
             storage.save_file(task_list)
         case 9: 
-            filename = ui.file_to_load()
-            return storage.load_file(filename)
+            return storage.load_file(ui.file_to_load())
         case 10:
             sys.exit()
         case _:
