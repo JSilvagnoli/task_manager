@@ -14,9 +14,9 @@ def add_task(task_list, new_task):
 
 def validate_task(new_task):
     for item in new_task:
-        FIELD_VALIDATION[item]
+        FIELD_VALIDATION[item](new_task[item])
 
-def validate_task_name(task_name):
+def validate_task_name_not_empty(task_name):
     if not task_name.strip():
         raise ValueError("Task name cannot be empty.")
 
@@ -55,7 +55,7 @@ def create_task(task_name, completed=False, priority=None, category=None, due_da
         "due_date": due_date
         }
 
-def find_task(task_list, task_to_update):
+def find_task_by_name(task_list, task_to_update):
     for task in task_list:
         if task["task"] == task_to_update:
             return task
@@ -66,7 +66,7 @@ def update_task_field(task, field_to_update, value_to_update):
     task[chosen_field] = value_to_update
 
 FIELD_VALIDATION = {
-    "task": validate_task_name,
+    "task": validate_task_name_not_empty,
     "completed": validate_task_completion,
     "priority": validate_task_priority,
     "category": validate_task_category,
@@ -111,6 +111,10 @@ def stats(task_list):
         "percentage": (complete / total) * 100 if total else 0
         }
 
+def sort_by(sort_method, task_list):
+    sorted = SORT_METHOD[str(sort_method)](task_list)
+    return sorted
+
 def sort_alphabetical(task_list):
     return sorted(task_list, key = lambda x: x["task"])
 
@@ -127,3 +131,9 @@ def _priority_sort_helper(task):
 
 def sort_date(task_list):
     return sorted(task_list, key = lambda x: x["due_date"], reverse = True)
+
+SORT_METHOD = {
+    "a": sort_alphabetical,
+    "p": sort_priority,
+    "d": sort_date
+}

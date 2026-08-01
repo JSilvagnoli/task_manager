@@ -9,11 +9,18 @@ def display_menu():
     print("4. Delete Task")
     print("5. Search")
     print("6. Statistics")
-    print("7. Save")
-    print("8. Load")
-    print("9. Quit")
+    print("7. Sort")
+    print("8. Save")
+    print("9. Load")
+    print("10. Quit")
 
-    return input("Choice: ")
+    while True:
+        choice = input("Choice: ")
+        if choice in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"):
+            return choice
+
+        print("Invalid choice. Please enter 1, 2, 3... 10")
+
 
 # Dispaly individual tasks and statuses
 def display_tasks(task_list):
@@ -21,60 +28,79 @@ def display_tasks(task_list):
         print(task.task_info(item))
 
 def prompt_input_for_task():
-    task_name = input("Task name: ")
-    status = input("Completed? True/False: ").lower() == "true"
-    priority = input("Priority: ")
-    category = input("Category: ")
-    due_date = input("Due date: ")
-
     return {
-        "task": task_name,
-        "completed": status,
-        "priority": priority,
-        "category": category,
-        "due_date": due_date
+        "task": input("Task name: "),
+        "completed": get_valid_task_completion_status(),
+        "priority": get_valid_task_priority(),
+        "category": input("Category: "),
+        "due_date": input("Due date: ")
     }
 
-def prompt_task_name():
-    print("Which task would you like to update?")
-    task_to_update = input()
-    return task_to_update
+def prompt_task_name(task_list):
+    while True:
+        choice = input("Which task would you like to update? ")
+        find_task_by_name(task_list, choice)
+
+        print ("Task does not exist. Please choose another task to update.")
 
 def prompt_update_field():
-    print("Would you like to update the 1. Task Name, 2. Completion Status, 3. Priority, 4. Category, 5. Due Date? (Type number, 1, 2, 3, etc.)")
-    field_to_update = input()
-    return field_to_update
+    while True:
+        choice = input("Would you like to update 1. Task Name, 2. Completion Status, 3. Priority, 4. Category, 5. Due Date? (Type number, 1, 2, 3, etc.) ")
+    
+        if choice in ("1", "2", "3", "4", "5"):
+            return choice
+
+        print("Invalid choice. Please enter 1, 2, 3, 4, or 5.")
 
 def prompt_update_value(field_to_update):
     match int(field_to_update):
         case 1:
-            print("Please enter this task's new name")
-            value_to_update = input()
+            return input("Please enter this task's new name: ")
         case 2:
-            print("Type True for complete, False for incomplete")
-            value_to_update = input().lower() == "true"
+            return get_valid_task_completion_status()
         case 3:
-            print("Please enter this task's priority -> Low, Medium, High")
-            value_to_update = input()
+            return get_valid_task_priority()
         case 4:
-            print("Please enter this task's category")
-            value_to_update = input()
+            return input("Please enter this task's category: ")
         case 5: 
-            print("Please enter this task's due date (YYYY/MM/DD)")
-            value_to_update = input()
+            return input("Please enter this task's due date (YYYY/MM/DD): ")
 
-    return value_to_update
+def get_valid_task_completion_status():
+    while True:
+        choice = input("Please enter this task's completion status. Type True for complete, False for incomplete: ").lower()
+        if choice == "true":
+            return True
+        elif choice == "false":
+            return False
+        else:
+            print("Invalid completion status. Please enter True or False: ")
 
-def prompt_delete_task():
-    return input("Which task would you like to delete? ")
+def get_valid_task_priority():
+     while True:
+        choice = input("Please enter this task's priority -> Low, Medium, or High: ").lower()
+        if choice in ("low", "medium", "high"):
+            return choice.title()
 
-def task_to_find():
-    print("Enter task to search for")
-    task_to_find = input()
-    return task_to_find
+        print("Invalid priority. Please enter Low, Medium, or High")
 
-def prompt_search():
-    return input("Enter task to search for: ")
+def prompt_delete_task(task_list):
+    while True:
+        choice = input("Which task would you like to delete? ")
+        find_task_by_name(task_list, choice)
+
+        print("Task does not exist. Please choose another task to delete.")
+
+def prompt_search(task_list):
+    while True:
+        choice = input("Which task would you like to search for? ")
+        find_task_by_name(task_list, choice)
+
+        print("Task does not exist. Please choose another task to search for.")
+
+def find_task_by_name(task_list, choice):
+    for item in task_list:
+            if choice == item["task"]:
+                return choice
 
 def display_stats(stats):
     print(f"Total Tasks: {stats['total']}")
@@ -82,14 +108,29 @@ def display_stats(stats):
     print(f"Incomplete: {stats['incomplete']}")
     print(f"Percentage: {stats['percentage']:.2f}%")
 
+def method_to_sort_tasks():
+    while True:
+        choice = input(
+            "Sort tasks Alphabetically (a), Priority (p), Due Date (d): "
+        ).lower()
+
+        if choice in ("a", "p", "d"):
+            return choice
+
+        print("Invalid choice. Please enter a, p, or d.")
+
 def file_to_load():
-    print("Would you like to load the default file (d), or another file (a)?")
-    choice = input().lower()
+    while True:
+        choice = input(
+            "Would you like to load the default file (d), or another file (a)? "
+            ).lower()
 
-    if choice == "d":
-        file_to_load = "data.json"
-    else:
-        print("Please enter the name of your json file saved in the same folder as this project. Example: data.json")
-        file_to_load = input()
+        if choice == "d":
+            return "data.json"
+        elif choice == "a":
+            return input(
+                "(Example: data.json)\n" +
+                "Enter JSON filename: "
+                )
 
-    return file_to_load
+        print ("Invalid choice. Please enter d or a.")
