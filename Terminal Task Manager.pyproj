@@ -28,7 +28,7 @@
     <Compile Include="task.py" />
     <Compile Include="test_task.py" />
     <Compile Include="ui.py" />
-    <Compile Include="validation.py" />
+    <Compile Include="task_manager.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">

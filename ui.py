@@ -1,6 +1,6 @@
 import task
+import task_manager
 from datetime import datetime
-from time import strftime
 
 # Display menu options
 def display_menu():
@@ -23,32 +23,31 @@ def display_menu():
 
         print("Invalid choice. Please enter 1, 2, 3... 10")
 
-
-# Dispaly individual tasks and statuses
-def display_tasks(task_list):
-    for item in task_list:
-        print(task.task_info(item))
-
 def prompt_input_for_task():
     return {
-        "task": input("Task name: "),
-        "completed": get_valid_task_completion_status(),
+        "task_name": input("Task name: "),
+        "completion_status": get_valid_task_completion_status(),
         "priority": get_valid_task_priority(),
         "category": input("Category: "),
         "due_date": get_valid_due_date()
     }
 
-def prompt_task_name(task_list):
+def select_task(task_list):
+    if not task_list:
+        print("No tasks found.")
+        return None
+
     while True:
         choice = input("Which task would you like to update? ")
-        find_task_by_name(task_list, choice)
+        task = task_manager.find_task_by_exact_name(task_list, choice)
+        if task:
+            return task
 
         print ("Task does not exist. Please choose another task to update.")
 
 def prompt_update_field():
     while True:
         choice = input("Would you like to update 1. Task Name, 2. Completion Status, 3. Priority, 4. Category, 5. Due Date? (Type number, 1, 2, 3, etc.) ")
-    
         if choice in ("1", "2", "3", "4", "5"):
             return choice
 
@@ -94,7 +93,7 @@ def get_valid_due_date():
             try:
                 # Due dates are currently stored as strings. This is so that sorting by date works. 
                 # However, external data validation in task.py expects a datetime type, not a string.
-                # Return and update this at a later time.
+                # Return to and update this at a later time.
                 valid_date = datetime.strptime(due_date, "%Y/%m/%d")
                 string_date = valid_date.strftime("%Y/%m/%d")
                 return string_date
@@ -104,21 +103,25 @@ def get_valid_due_date():
 def prompt_delete_task(task_list):
     while True:
         choice = input("Which task would you like to delete? ")
-        find_task_by_name(task_list, choice)
-
+        task = task_manager.find_task_by_exact_name(task_list, choice)
+        if task:
+            return task
+    
         print("Task does not exist. Please choose another task to delete.")
 
 def prompt_search(task_list):
     while True:
         choice = input("Which task would you like to search for? ")
-        find_task_by_name(task_list, choice)
+        found_tasks = task_manager.find_tasks_by_partial_name(task_list, choice)
+        if (found_tasks):
+            return found_tasks
 
-        print("Task does not exist. Please choose another task to search for.")
+        print("No Task/s found. Please choose another task to search for.")
 
-def find_task_by_name(task_list, choice):
-    for item in task_list:
-            if choice == item["task"]:
-                return choice
+def display_found_tasks(tasks):
+    print("Found Task/s: ")
+    for task in tasks:
+        print(task.task_info())
 
 def display_stats(stats):
     print(f"Total Tasks: {stats['total']}")
@@ -140,7 +143,7 @@ def method_to_sort_tasks():
 def file_to_load():
     while True:
         choice = input(
-            "Would you like to load the default file (d), or another file (a)? "
+            "Would you like to load the default file (d), another file (a), or none (n)? "
             ).lower()
 
         if choice == "d":
@@ -150,5 +153,7 @@ def file_to_load():
                 "(Example: data.json)\n" +
                 "Enter JSON filename: "
                 )
+        elif choice == "n":
+            return
 
-        print ("Invalid choice. Please enter d or a.")
+        print ("Invalid choice. Please enter d, a, or n.")
