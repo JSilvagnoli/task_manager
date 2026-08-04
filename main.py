@@ -27,7 +27,7 @@ def view_tasks(task_list):
 
 def handle_add_task(task_list):
 	task_data = ui.prompt_input_for_task()
-	task_manager.add_task(task_data, task_list)
+	task_list = task_manager.add_task(task_data, task_list)
 	return task_list
 
 def update_task(task_list):

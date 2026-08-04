@@ -1,11 +1,9 @@
 from datetime import datetime
-import itertools
+
+import task_manager
 
 class Task:
-    id_generator = itertools.count(start = 1) # rather than hardcoding start at 1, figure out how to make start = next available unique id
-
     TASK_FIELDS = {
-        "0": "id",
         "1": "task_name",
         "2": "completion_status",
         "3": "priority",
@@ -13,10 +11,8 @@ class Task:
         "5": "due_date"
     }
 
-    def __init__(self, id, task_name, completion_status = False, priority = None, category = None, due_date = None):
-        self.id = id
-        if self.id is None:
-            self.id = next(Task.id_generator)
+    def __init__(self, task_id, task_name, completion_status = False, priority = None, category = None, due_date = None):
+        self.task_id = task_id
         self.task_name = task_name
         self.completion_status = completion_status
         self.priority = priority
@@ -73,21 +69,10 @@ class Task:
             
     def task_info(self):
         return(
-            f"ID: {self.id} | "
+            f"ID: {self.task_id} | "
             f"Task Name: {self.task_name} | "
             f"Completed: {self.completion_status} | "
             f"Priority: {self.priority} | "
             f"Category: {self.category} | "
             f"Due Date: {self.due_date} "
             )
-
-    def convert_to_dict(task):
-        return vars(task)
-
-    @classmethod
-    def convert_from_dict(cls, data):
-        task_list = []
-        for item in data:
-            converted_data = cls(**item)
-            task_list.append(converted_data)
-        return task_list

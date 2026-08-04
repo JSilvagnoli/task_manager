@@ -1,8 +1,8 @@
 import task
 
-def add_task(task_data, task_list): # update to correctly add an id
+def add_task(task_data, task_list):
     new_task = task.Task(
-		"id": task.id_generator() # this is wrong but at least an idea
+        next_available_id(task_list),
 		task_data["task_name"],
 		task_data["completion_status"],
 		task_data["priority"],
@@ -11,6 +11,14 @@ def add_task(task_data, task_list): # update to correctly add an id
 	)
     new_task.validate_task()
     task_list.append(new_task)
+
+def next_available_id(task_list):
+    next_available_id = 1
+    for task in task_list:
+        current_id = getattr(task, "task_id")
+        if current_id >= next_available_id:
+            next_available_id = current_id + 1
+    return next_available_id
 
 def delete_task(task_list, task_to_delete):
     task_index = None

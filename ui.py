@@ -105,7 +105,6 @@ def display_found_tasks(tasks):
     print("Found Task/s: ")
     for task in tasks:
         print(task.task_info())
-        print(type(task.task_info()))
 
 def display_stats(stats):
     print(f"Total Tasks: {stats['total']}")
