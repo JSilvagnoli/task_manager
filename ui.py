@@ -1,4 +1,3 @@
-import task
 import task_manager
 from datetime import datetime
 
@@ -25,11 +24,11 @@ def display_menu():
 
 def prompt_input_for_task():
     return {
-        "task_name": input("Task name: "),
+        "task_name": input("Please enter your task's name: "),
         "completion_status": get_valid_task_completion_status(),
         "priority": get_valid_task_priority(),
-        "category": input("Category: "),
-        "due_date": get_valid_due_date()
+        "category": input("Please enter your task's category: "),
+        "due_date": input("Please enter your task's due date. Example (2000/01/01): ")
     }
 
 def select_task(task_list):
@@ -64,7 +63,7 @@ def prompt_update_value(field_to_update):
         case 4:
             return input("Please enter this task's category: ")
         case 5: 
-            return get_valid_due_date()
+            return input("Please enter a due date for this task. Example (2000/01/01): ")
 
 def get_valid_task_completion_status():
     while True:
@@ -83,22 +82,6 @@ def get_valid_task_priority():
             return choice.title()
         
         print("Invalid priority. Please enter Low, Medium, or High")
-
-def get_valid_due_date():
-    while True:
-        due_date = input("Please enter this task's due date (YYYY/MM/DD) Example: (2000/01/01): ")
-        if due_date is None:
-            return due_date
-        else:
-            try:
-                # Due dates are currently stored as strings. This is so that sorting by date works. 
-                # However, external data validation in task.py expects a datetime type, not a string.
-                # Return to and update this at a later time.
-                valid_date = datetime.strptime(due_date, "%Y/%m/%d")
-                string_date = valid_date.strftime("%Y/%m/%d")
-                return string_date
-            except ValueError:
-                print("Invalid date format. Please use (YYYY/MM/DD) format.")
 
 def prompt_delete_task(task_list):
     while True:
@@ -122,6 +105,7 @@ def display_found_tasks(tasks):
     print("Found Task/s: ")
     for task in tasks:
         print(task.task_info())
+        print(type(task.task_info()))
 
 def display_stats(stats):
     print(f"Total Tasks: {stats['total']}")

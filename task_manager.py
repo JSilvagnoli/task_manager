@@ -1,8 +1,8 @@
 import task
 
-def add_task(task_data, task_list):
+def add_task(task_data, task_list): # update to correctly add an id
     new_task = task.Task(
-				
+		"id": task.id_generator() # this is wrong but at least an idea
 		task_data["task_name"],
 		task_data["completion_status"],
 		task_data["priority"],
@@ -12,18 +12,23 @@ def add_task(task_data, task_list):
     new_task.validate_task()
     task_list.append(new_task)
 
-def delete_task(task_list, task_to_delete):   
-    for task in task_list:
+def delete_task(task_list, task_to_delete):
+    task_index = None
+
+    for index, task in enumerate(task_list):
         if task == task_to_delete:
-            task_list.remove(task_to_delete)
-        else:
-            raise ValueError("That task cannot be found and therefore cannot be deleted.")
+            task_index = index
+            break
+
+    if task_index is not None:
+        task_list.pop(task_index)
+    else:
+        raise ValueError("That task cannot be found and therefore cannot be deleted.")
 
 def find_task_by_exact_name(task_list, choice):
     for task in task_list:
         if choice == task.task_name:
             return task
-
     return None
 
 def find_tasks_by_partial_name(task_list, choice):
@@ -49,10 +54,12 @@ def sort_by(sort_method, task_list):
     return sorted
 
 def sort_alphabetical(task_list):
-    task_list.sort(key = lambda x: x.task_name)
+    sorted_list = sorted(task_list, key = lambda x: x.task_name)
+    return sorted_list
 
 def sort_priority(task_list):
-    task_list.sort(key = _priority_sort_helper)
+    sorted_list = sorted(task_list, key = _priority_sort_helper)
+    return sorted_list
 
 def _priority_sort_helper(Task):
     if Task.priority == "High":
@@ -63,7 +70,8 @@ def _priority_sort_helper(Task):
         return 2
 
 def sort_date(task_list):
-    task_list.sort(reverse = True, key = lambda x: x.due_date)
+    sorted_list = sorted(task_list, key = lambda x: x.due_date, reverse = True)
+    return sorted_list
 
 SORT_METHOD = {
     "a": sort_alphabetical,

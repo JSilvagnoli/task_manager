@@ -5,61 +5,65 @@ import task_manager
 import ui
 
 def main():
-	task_list = storage.load_file(ui.file_to_load())
+	task_list = storage.load_json(ui.file_to_load())
 
 	while True:
-		handle_menu_choice(ui.display_menu(), task_list)
-
-def has_tasks(task_list):
-	if task_list is None:
-		print("No tasks found.")
-		return False
-	return True
+		task_list = handle_menu_choice(ui.display_menu(), task_list)
 
 def handle_menu_choice(user_input, task_list):
 	handler = COMMANDS.get(user_input)
 	if handler:
-		task_list = handler(task_list)
-	else:
-		print("Invalid input.")
+		return handler(task_list)
+	
+	print("Invalid input.")
+	return task_list
 
 def display_menu():
 	ui.display_menu() 
 
 def view_tasks(task_list):
 	ui.display_found_tasks(task_list)
+	return task_list
 
 def handle_add_task(task_list):
 	task_data = ui.prompt_input_for_task()
 	task_manager.add_task(task_data, task_list)
+	return task_list
 
 def update_task(task_list):
 	selected_task = ui.select_task(task_list)
 	field = ui.prompt_update_field()
 	value = ui.prompt_update_value(field)
 	selected_task.update_task_field(field, value)
+	return task_list
 
 def delete_task(task_list):
-	task = ui.prompt_delete_task(task_list)
-	task_manager.delete_task(task_list, task)
+	task_to_delete = ui.prompt_delete_task(task_list)
+	task_manager.delete_task(task_list, task_to_delete)
+	return task_list
 
 def search_tasks_by_name(task_list):
 	found_tasks = ui.prompt_search(task_list)
 	ui.display_found_tasks(found_tasks)
+	return task_list
 
 def stats(task_list):
 	statistics = task_manager.stats(task_list)
 	ui.display_stats(statistics)
+	return task_list
 
 def sort(task_list):
 	sort_method = ui.method_to_sort_tasks()
 	sorted_tasks = task_manager.sort_by(sort_method, task_list)
+	ui.display_found_tasks(sorted_tasks)
+	return task_list
 
 def save(task_list):
-	storage.save_file(task_list)
+	storage.save_json(task_list)
+	return task_list
 
 def load():
-	return storage.load_file(ui.file_to_load())
+	return storage.load_json(ui.file_to_load())
 
 def close_program():
 	sys.exit()

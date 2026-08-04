@@ -2,7 +2,7 @@ from datetime import datetime
 import itertools
 
 class Task:
-    id_generator = itertools.count(start = 1)
+    id_generator = itertools.count(start = 1) # rather than hardcoding start at 1, figure out how to make start = next available unique id
 
     TASK_FIELDS = {
         "0": "id",
@@ -13,8 +13,10 @@ class Task:
         "5": "due_date"
     }
 
-    def __init__(self, task_name, completion_status = False, priority = None, category = None, due_date = None):
-        self.id = next(Task.id_generator)
+    def __init__(self, id, task_name, completion_status = False, priority = None, category = None, due_date = None):
+        self.id = id
+        if self.id is None:
+            self.id = next(Task.id_generator)
         self.task_name = task_name
         self.completion_status = completion_status
         self.priority = priority
@@ -22,12 +24,12 @@ class Task:
         self.due_date = due_date
 
     def validate_task(self):
-        for value in self.FIELD_VALIDATION:
-            self.FIELD_VALIDATION[value](getattr(self, value))
+        for value in Task.FIELD_VALIDATION:
+            Task.FIELD_VALIDATION[value](getattr(self, value))
 
     def validate_task_name_not_empty(value):
         if not value.strip():
-            raise ValueError("Task name cannot be empty.")
+            raise ValueError("Task name cannot be blank.")
 
     def validate_task_completion(value):
         if not isinstance(value, bool):
@@ -45,11 +47,11 @@ class Task:
             return
     
         if not value.strip():
-            raise ValueError("Category cannot be empty")
+            raise ValueError("Category cannot be blank")
 
     def validate_task_due_date(value):
-        if value is None:
-            return
+        if not value.strip():
+            raise ValueError("Due date cannot be blank.")
     
         try:
             datetime.strptime(value, "%Y/%m/%d")
@@ -57,8 +59,8 @@ class Task:
             raise ValueError("Invalid date format. Please use (YYYY/MM/DD) format.")
 
     def update_task_field(self, field_to_update, value_to_update):
-        chosen_field = self.TASK_FIELDS[field_to_update]
-        self.FIELD_VALIDATION[chosen_field](value_to_update)
+        chosen_field = Task.TASK_FIELDS[field_to_update]
+        Task.FIELD_VALIDATION[chosen_field](value_to_update)
         setattr(self, chosen_field, value_to_update)
 
     FIELD_VALIDATION = {
@@ -79,4 +81,13 @@ class Task:
             f"Due Date: {self.due_date} "
             )
 
-    
+    def convert_to_dict(task):
+        return vars(task)
+
+    @classmethod
+    def convert_from_dict(cls, data):
+        task_list = []
+        for item in data:
+            converted_data = cls(**item)
+            task_list.append(converted_data)
+        return task_list
