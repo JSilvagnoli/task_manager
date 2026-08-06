@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import task_manager
-
 class Task:
     TASK_FIELDS = {
         "1": "task_name",
@@ -11,13 +9,26 @@ class Task:
         "5": "due_date"
     }
 
-    def __init__(self, task_id, task_name, completion_status = False, priority = None, category = None, due_date = None):
+    def __init__(self, task_id, task_name, completion_status, priority, category, due_date):
         self.task_id = task_id
         self.task_name = task_name
         self.completion_status = completion_status
         self.priority = priority
         self.category = category
         self.due_date = due_date
+        self.validate_task()
+
+    def __eq__(self, other):
+        if not isinstance(other, Task):
+            return NotImplemented
+        return (
+            self.task_id == other.task_id and 
+            self.task_name == other.task_name and
+            self.completion_status == other.completion_status and 
+            self.priority == other.priority and
+            self.category == other.category and
+            self.due_date == other.due_date
+        )
 
     def validate_task(self):
         for value in Task.FIELD_VALIDATION:
@@ -32,27 +43,22 @@ class Task:
             raise TypeError("Completion status must be True or False.")
 
     def validate_task_priority(value):
-        if value is None:
-            return
-    
-        if value not in ("High", "Medium", "Low"):
-            raise ValueError("Priority must be either Low, Medium, or High")
+        if value not in ("Low", "Medium", "High", ""):
+            raise ValueError("Priority must be either Low, Medium, High, or leave it blank for no priority.")
 
     def validate_task_category(value):
+        if value == "":
+            return
+        
+        if not isinstance(value, str):
+            raise TypeError("Category must be either a string or blank.")
+
+    def validate_task_due_date(value):
         if value is None:
             return
     
-        if not value.strip():
-            raise ValueError("Category cannot be blank")
-
-    def validate_task_due_date(value):
-        if not value.strip():
-            raise ValueError("Due date cannot be blank.")
-    
-        try:
-            datetime.strptime(value, "%Y/%m/%d")
-        except ValueError:
-            raise ValueError("Invalid date format. Please use (YYYY/MM/DD) format.")
+        if not isinstance(value, datetime):
+            raise TypeError("Due date must be a datetime object or None.")
 
     def update_task_field(self, field_to_update, value_to_update):
         chosen_field = Task.TASK_FIELDS[field_to_update]

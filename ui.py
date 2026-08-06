@@ -24,11 +24,11 @@ def display_menu():
 
 def prompt_input_for_task():
     return {
-        "task_name": input("Please enter your task's name: "),
+        "task_name": get_valid_task_name(),
         "completion_status": get_valid_task_completion_status(),
         "priority": get_valid_task_priority(),
         "category": input("Please enter your task's category: "),
-        "due_date": input("Please enter your task's due date. Example (2000/01/01): ")
+        "due_date": get_valid_due_date()
     }
 
 def select_task(task_list):
@@ -55,15 +55,23 @@ def prompt_update_field():
 def prompt_update_value(field_to_update):
     match int(field_to_update):
         case 1:
-            return input("Please enter this task's new name: ")
+            return get_valid_task_name()
         case 2:
             return get_valid_task_completion_status()
         case 3:
             return get_valid_task_priority()
         case 4:
-            return input("Please enter this task's category: ")
+            return input("Please enter this task's category, or leave it blank for no category: ")
         case 5: 
-            return input("Please enter a due date for this task. Example (2000/01/01): ")
+            return get_valid_due_date()
+
+def get_valid_task_name():
+    while True:
+        choice = input("Please enter this task's name: ")
+        if not choice.strip():
+            print("Task name can not be blank. Please enter a name for this task")
+        else:
+            return choice
 
 def get_valid_task_completion_status():
     while True:
@@ -77,11 +85,21 @@ def get_valid_task_completion_status():
 
 def get_valid_task_priority():
      while True:
-        choice = input("Please enter this task's priority -> Low, Medium, or High: ").lower()
-        if choice in ("low", "medium", "high"):
+        choice = input("Please enter this task's priority -> Low, Medium, High, or leave it blank for no priority: ").lower()
+        if choice in ("low", "medium", "high", ""):
             return choice.title()
         
-        print("Invalid priority. Please enter Low, Medium, or High")
+        print("Invalid priority. Please enter Low, Medium, High, or leave it blank for no priority.")
+
+def get_valid_due_date():
+    while True:
+        choice = input("Please enter a due date for this task. Example (2000/01/01) Or leave it blank for no due date: ")
+        if choice == "":
+            return None
+        try:
+            return datetime.strptime(choice, "%Y/%m/%d")
+        except ValueError:
+            print("Invalid date format. Please use (YYYY/MM/DD) format.")
 
 def prompt_delete_task(task_list):
     while True:

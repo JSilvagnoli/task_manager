@@ -1,4 +1,5 @@
 import task
+import datetime
 
 def add_task(task_data, task_list):
     new_task = task.Task(
@@ -9,7 +10,6 @@ def add_task(task_data, task_list):
 		task_data["category"],
 		task_data["due_date"]
 	)
-    new_task.validate_task()
     task_list.append(new_task)
 
 def next_available_id(task_list):
@@ -69,17 +69,24 @@ def sort_priority(task_list):
     sorted_list = sorted(task_list, key = _priority_sort_helper)
     return sorted_list
 
-def _priority_sort_helper(Task):
-    if Task.priority == "High":
+def _priority_sort_helper(task):
+    if task.priority == "High":
         return 0
-    elif Task.priority == "Medium":
+    elif task.priority == "Medium":
         return 1
-    else:
+    elif task.priority == "Low":
         return 2
+    else:
+        return 3
 
 def sort_date(task_list):
-    sorted_list = sorted(task_list, key = lambda x: x.due_date, reverse = True)
+    sorted_list = sorted(task_list, key = _due_date_sort_helper, reverse = True)
     return sorted_list
+
+def _due_date_sort_helper(task):
+    if task.due_date is None:
+        return datetime.min
+    return task.due_date
 
 SORT_METHOD = {
     "a": sort_alphabetical,
