@@ -1,8 +1,9 @@
 import unittest
 from datetime import datetime
-from task import Task
 import storage
 import json
+
+from task import Task
 
 class TestStorage(unittest.TestCase):
     def setUp(self):

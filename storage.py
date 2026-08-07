@@ -1,12 +1,13 @@
 import json
+from datetime import datetime
+
 from task import Task
-from datetime import datetime 
 
 def save_json(task_list, filename = "data.json"):
     with open(filename, "w") as outfile:
         task_list_json = [
-            convert_to_dict(task)
-            for task in task_list
+            convert_to_dict(task_to_use)
+            for task_to_use in task_list
         ]
         json.dump(task_list_json, outfile)
 
@@ -20,16 +21,16 @@ def load_json(file_to_load):
         task_list = convert_from_dict(data)
         return task_list
 
-def convert_to_dict(task):
+def convert_to_dict(task_to_convert):
     return {
-        "task_id": task.task_id,
-        "task_name": task.task_name,
-        "completion_status": task.completion_status,
-        "priority": task.priority,
-        "category": task.category,
+        "task_id": task_to_convert.task_id,
+        "task_name": task_to_convert.task_name,
+        "completion_status": task_to_convert.completion_status,
+        "priority": task_to_convert.priority,
+        "category": task_to_convert.category,
         "due_date":
-	        task.due_date.strftime("%Y/%m/%d")
-	        if task.due_date is not None
+	        task_to_convert.due_date.strftime("%Y/%m/%d")
+	        if task_to_convert.due_date is not None
 	        else None
     }
 

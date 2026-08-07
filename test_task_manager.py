@@ -37,7 +37,7 @@ class TestTaskManager(unittest.TestCase):
                 completion_status=False,
                 priority="Medium",
                 category="Test",
-                due_date=datetime(1992,2,10)
+                due_date=datetime(2026,8,6)
             )
         ]
     
@@ -139,7 +139,10 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(stats["total"], 4)
         self.assertEqual(stats["complete"], 1)
         self.assertEqual(stats["incomplete"], 3)
-        self.assertAlmostEqual(stats["percentage"], 25.00, places=2)
+        self.assertEqual(stats["overdue"], 1)
+        self.assertEqual(stats["due_today"], 1)
+        self.assertEqual(stats["high_priority_remaining"], 1)
+        self.assertAlmostEqual(stats["percentage_completed"], 25.00, places=2)
 
     def test_stats_empty_list(self):
         stats = task_manager.stats([])
@@ -147,7 +150,10 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(stats["total"], 0)
         self.assertEqual(stats["complete"], 0)
         self.assertEqual(stats["incomplete"], 0)
-        self.assertEqual(stats["percentage"], 0)
+        self.assertEqual(stats["overdue"], 0)
+        self.assertEqual(stats["due_today"], 0)
+        self.assertEqual(stats["high_priority_remaining"], 0)
+        self.assertEqual(stats["percentage_completed"], 0)
 
     def test_sort_alphabetically(self):
         sorted_list = task_manager.sort_alphabetical(self.task_list)
@@ -185,8 +191,8 @@ class TestTaskManager(unittest.TestCase):
             sorted_due_dates,
             [
                 datetime(2593,11,23),
-                datetime(2000,3,9),
-                datetime(1992,2,10),
+                datetime(2026,8,6),
+                datetime(2000,3,9),               
                 datetime.min
             ]
         )

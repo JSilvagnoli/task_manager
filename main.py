@@ -1,14 +1,14 @@
 import sys
-import task
+import ui
+
 import storage
 import task_manager
-import ui
 
 def main():
 	task_list = storage.load_json(ui.file_to_load())
 
 	while True:
-		task_list = handle_menu_choice(ui.display_menu(), task_list)
+		task_list = handle_menu_choice(ui.display_menu(task_list), task_list)
 
 def handle_menu_choice(user_input, task_list):
 	handler = COMMANDS.get(user_input)
@@ -18,8 +18,8 @@ def handle_menu_choice(user_input, task_list):
 	print("Invalid input.")
 	return task_list
 
-def display_menu():
-	ui.display_menu() 
+def display_menu(task_list):
+	ui.display_menu(task_list) 
 
 def handle_view_tasks(task_list):
 	ui.display_found_tasks(task_list)

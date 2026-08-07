@@ -1,9 +1,16 @@
-import task_manager
 from datetime import datetime
 
+import task_manager
+
 # Display menu options
-def display_menu():
-    print("==== TASK MANAGER ====")
+def display_menu(task_list):
+    print("====================")
+    print("    Task Manager    ")
+    print("====================")
+    statistics = task_manager.stats(task_list)
+    display_stats(statistics)
+
+    print("--------------------")
     print("1. View Tasks")
     print("2. Add Task")
     print("3. Update Task")
@@ -38,9 +45,9 @@ def select_task(task_list):
 
     while True:
         choice = input("Which task would you like to update? ")
-        task = task_manager.find_task_by_exact_name(task_list, choice)
-        if task:
-            return task
+        selected_task = task_manager.find_task_by_exact_name(task_list, choice)
+        if selected_task:
+            return selected_task
 
         print ("Task does not exist. Please choose another task to update.")
 
@@ -104,9 +111,9 @@ def get_valid_due_date():
 def prompt_delete_task(task_list):
     while True:
         choice = input("Which task would you like to delete? ")
-        task = task_manager.find_task_by_exact_name(task_list, choice)
-        if task:
-            return task
+        task_to_delete = task_manager.find_task_by_exact_name(task_list, choice)
+        if task_to_delete:
+            return task_to_delete
     
         print("Task does not exist. Please choose another task to delete.")
 
@@ -121,14 +128,17 @@ def prompt_search(task_list):
 
 def display_found_tasks(tasks):
     print("Found Task/s: ")
-    for task in tasks:
-        print(task.task_info())
+    for task_to_display in tasks:
+        print(task_to_display.task_info())
 
 def display_stats(stats):
     print(f"Total Tasks: {stats['total']}")
     print(f"Completed: {stats['complete']}")
     print(f"Incomplete: {stats['incomplete']}")
-    print(f"Percentage: {stats['percentage']:.2f}%")
+    print(f"Overdue: {stats['overdue']}")
+    print(f"Due Today: {stats['due_today']}")
+    print(f"High Priority Remaining: {stats['high_priority_remaining']}")
+    print(f"Percentage Completed: {stats['percentage_completed']:.2f}%")
 
 def method_to_sort_tasks():
     while True:

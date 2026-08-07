@@ -1,7 +1,7 @@
 import unittest
+from datetime import datetime
 
 from task import Task
-from datetime import datetime
 
 class TestTask(unittest.TestCase):
     def test_task_creation_valid_data(self):

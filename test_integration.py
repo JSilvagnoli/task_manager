@@ -1,10 +1,11 @@
 import os
 import unittest
+import json
 from datetime import datetime
+
 from task import Task
 import storage
 import task_manager
-import json
 
 class TestStorage(unittest.TestCase):
     def setUp(self):
